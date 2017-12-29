@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package goriyak;
+package proto;
 
 import "google/protobuf/timestamp.proto";
 
@@ -10,7 +10,7 @@ service Goriyak {
     rpc Login(Node) returns (Status){}
     rpc PostTransaction(TransactionRequest) returns (Status){}
     rpc GetBlock(BlockRequest) returns (Block){} 
-    rpc SuccessMining(MiningResult) returns (Status){}
+    rpc PostMiningResult(MiningResult) returns (Status){}
 }
 
 service Admin {
