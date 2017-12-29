@@ -5,4 +5,3 @@ CREATE TABLE transaction (
   amount          DOUBLE          NOT NULL,
   created_at      DATETIME        NOT NULL
 );
-

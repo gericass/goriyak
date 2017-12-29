@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package goriyak;
+
+import "google/protobuf/timestamp.proto";
+
+service Goriyak {
+    rpc RegisterNode(Node) returns (Status){}
+    rpc DeleteNode(Node) returns (Status){}
+    rpc Login(Node) returns (Status){}
+    rpc PostTransaction(TransactionRequest) returns (Status){}
+    rpc GetBlock(BlockRequest) returns (Block){} 
+    rpc SuccessMining(MiningResult) returns (Status){}
+}
+
+service Admin {
+    rpc PostBlock(MiningResult) returns (Status){}
+    rpc PostTransaction(Transaction) returns (Status){}
+}
+
+// confirm between server
+message Transaction {
+    string name = 1;
+    int64 send_node_id = 2;
+    int64 receive_node_id = 3;
+    double amount = 4;
+    google.protobuf.Timestamp created_at = 5;
+}
+
+// post from client to server
+message TransactionRequest {
+    string node_name = 1;
+    string password = 2;
+    string name = 3;
+    int64 send_node_id = 4;
+    int64 receive_node_id = 5;
+    double amount = 6;
+    google.protobuf.Timestamp created_at = 7;
+}
+
+// for confirm node
+message Node {
+    string name = 1;
+    string password = 2;
+}
+
+// request for start mining
+message BlockRequest {}
+
+// for mining
+message Block {
+    message Transaction {
+        int64 id = 1;
+        int64 send_node_id = 2;
+        int64 receive_node_id = 3;
+        double amount = 4;
+        google.protobuf.Timestamp created_at = 5;
+    }
+    int64 id = 1;
+    repeated Transaction transactions = 2;
+    google.protobuf.Timestamp started_at = 3;
+    google.protobuf.Timestamp finished_at = 4;
+    repeated string sign = 5;
+    string previous_hash = 6;
+    string nonce = 7;
+    google.protobuf.Timestamp created_at = 8;
+    string difficulty = 9;
+}
+
+// post from client to server
+message MiningResult {
+    int64 block_id = 1;
+    string hash = 2;
+    string nonce = 3;
+    string name = 4; // name of mined node 
+}
+
+// uses only in response
+message Status {
+    string message = 1;
+}
