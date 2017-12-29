@@ -5,6 +5,7 @@ import (
 	pb "github.com/gericass/goriyak/proto"
 )
 
+// AdminServer : empty struct for implements proto.AdminServer
 type AdminServer struct{}
 
 // NewAdminServer : for register AdminServer

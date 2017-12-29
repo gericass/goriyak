@@ -5,6 +5,7 @@ import (
 	pb "github.com/gericass/goriyak/proto"
 )
 
+// GoriyakServer : empty struct for implements proto.GoriyakServer
 type GoriyakServer struct{}
 
 // NewGoriyakClient : for register GoriyakServer
