@@ -1,9 +1,9 @@
 {
-  "id": 0,
+  "id": "string",
   "name": "node1",
   "password": "password",
   "salt": "salt",
   "joined_at": "2017-02-01T03:15:45.000Z",
   "updated_at": "2017-02-01T03:15:45.000Z",
-  "parent_server_id": 0
+  "parent_server_id": "string"
 }
