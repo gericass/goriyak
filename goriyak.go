@@ -13,7 +13,7 @@ const grpcPort = ":50051"
 func main() {
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Println("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	pb.RegisterAdminServer(s, handler.NewAdminServer())

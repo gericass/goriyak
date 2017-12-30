@@ -1,5 +1,5 @@
 {
-  "id": 0,
+  "id": "unique",
   "name": "to identify transaction between sender and receiver",
   "send_node_id": 0,
   "receive_node_id": 0,
