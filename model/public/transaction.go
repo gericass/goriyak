@@ -23,9 +23,9 @@ func (p *PublicTransaction) PutTransaction() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	url := Host + "/buckets/transaction/keys/" + p.ID + "'"
+	url := OptHost + "/buckets/transaction/keys/" + p.ID + "'"
 	jsonString := "'" + string(transaction) + "'"
-	out, err := exec.Command(ComCurl, OptX, OptPUT, OptI, url, OptH, OptJson, OptD, jsonString).CombinedOutput()
+	out, err := exec.Command(ComCurl, OptX, OptPUT,url, OptJson, OptD, jsonString).CombinedOutput()
 	if err != nil {
 		return "", err
 	}
