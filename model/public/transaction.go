@@ -6,6 +6,7 @@ import (
 	"os/exec"
 )
 
+// PublicTransaction : bind the json of transaction for riak
 type PublicTransaction struct {
 	ID            string    `json:"id"`
 	Name          string    `json:"name"`
@@ -16,16 +17,17 @@ type PublicTransaction struct {
 	CreatedAt     time.Time `json:"created_at"`
 }
 
-func (p *PublicTransaction) PutTransaction() error {
+// PutTransaction : method for put new transaction to riak
+func (p *PublicTransaction) PutTransaction() (string, error) {
 	transaction, err := json.Marshal(p)
 	if err != nil {
-		return err
+		return "", err
 	}
 	url := Host + "/buckets/transaction/keys/" + p.ID + "'"
 	jsonString := "'" + string(transaction) + "'"
-	_, err = exec.Command(ComCurl, OptX, OptPUT, OptI, url, OptH, OptJson, OptD, jsonString).CombinedOutput()
+	out, err := exec.Command(ComCurl, OptX, OptPUT, OptI, url, OptH, OptJson, OptD, jsonString).CombinedOutput()
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return string(out), nil
 }
