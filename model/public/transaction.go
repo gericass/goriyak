@@ -2,12 +2,10 @@ package public
 
 import (
 	"time"
+	"github.com/basho/taste-of-riak/go/util"
+	"github.com/basho/riak-go-client"
+	"sync"
 	"encoding/json"
-	"github.com/gericass/goriyak/model"
-	"net/http"
-	"errors"
-	"bytes"
-	"fmt"
 )
 
 // PublicTransaction : bind the json of transaction for riak
@@ -23,20 +21,57 @@ type PublicTransaction struct {
 
 // PutTransaction : method for put new transaction to riak
 func (p *PublicTransaction) PutTransaction() error {
-	transaction, err := json.Marshal(p)
+	o := &riak.NewClientOptions{
+		RemoteAddresses: []string{util.GetRiakAddress()},
+	}
+
+	var c *riak.Client
+	c, err := riak.NewClient(o)
 	if err != nil {
-		return err
+		util.ErrExit(err)
 	}
-	url := baseURL + "/buckets/transaction/keys/" + p.ID
-	res, err := model.PutRequest(url, string(transaction))
+
+	defer func() {
+		if err := c.Stop(); err != nil {
+			util.ErrExit(err)
+		}
+	}()
+
+	// NB: ensure that members are exported (i.e. capitalized)
+	var jsonbytes []byte
+	jsonbytes, err = json.Marshal(p)
 	if err != nil {
-		return err
+		util.ErrExit(err)
 	}
-	fmt.Println(res.StatusCode)
-	if res.StatusCode != http.StatusNoContent {
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(res.Body)
-		return errors.New(buf.String())
+
+	objs := []*riak.Object{
+		{
+			Bucket:      "transaction",
+			Key:         p.ID,
+			ContentType: "application/json",
+			Value:       jsonbytes,
+		},
 	}
+
+	var cmd riak.Command
+	wg := &sync.WaitGroup{}
+
+	for _, o := range objs {
+		cmd, err = riak.NewStoreValueCommandBuilder().
+			WithContent(o).
+			Build()
+		if err != nil {
+			return err
+		}
+		a := &riak.Async{
+			Command: cmd,
+			Wait:    wg,
+		}
+		if err := c.ExecuteAsync(a); err != nil {
+			util.ErrLog.Println(err)
+		}
+	}
+
+	wg.Wait()
 	return nil
 }
