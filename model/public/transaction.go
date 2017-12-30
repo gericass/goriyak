@@ -3,31 +3,40 @@ package public
 import (
 	"time"
 	"encoding/json"
-	"os/exec"
+	"github.com/gericass/goriyak/model"
+	"net/http"
+	"errors"
+	"bytes"
+	"fmt"
 )
 
 // PublicTransaction : bind the json of transaction for riak
 type PublicTransaction struct {
 	ID            string    `json:"id"`
 	Name          string    `json:"name"`
-	SendNodeID    string     `json:"send_node_id"`
-	ReceiveNodeID string     `json:"receive_node_id"`
+	SendNodeID    string    `json:"send_node_id"`
+	ReceiveNodeID string    `json:"receive_node_id"`
 	Amount        float64   `json:"amount"`
 	Status        string    `json:"status"`
 	CreatedAt     time.Time `json:"created_at"`
 }
 
 // PutTransaction : method for put new transaction to riak
-func (p *PublicTransaction) PutTransaction() (string, error) {
+func (p *PublicTransaction) PutTransaction() error {
 	transaction, err := json.Marshal(p)
 	if err != nil {
-		return "", err
+		return err
 	}
-	url := OptHost + "/buckets/transaction/keys/" + p.ID + "'"
-	jsonString := "'" + string(transaction) + "'"
-	out, err := exec.Command(ComCurl, OptX, OptPUT,url, OptJson, OptD, jsonString).CombinedOutput()
+	url := baseURL + "/buckets/transaction/keys/" + p.ID
+	res, err := model.PutRequest(url, string(transaction))
 	if err != nil {
-		return "", err
+		return err
 	}
-	return string(out), nil
+	fmt.Println(res.StatusCode)
+	if res.StatusCode != http.StatusNoContent {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(res.Body)
+		return errors.New(buf.String())
+	}
+	return nil
 }

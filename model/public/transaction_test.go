@@ -3,11 +3,10 @@ package public
 import (
 	"testing"
 	"time"
-	"strings"
 )
 
 func TestPutTransaction(t *testing.T) {
-	tr := &PublicTransaction{ID: "test",
+	tr := &PublicTransaction{ID: "test5",
 		Name: "testNode",
 		SendNodeID: "send",
 		ReceiveNodeID: "receive",
@@ -15,12 +14,8 @@ func TestPutTransaction(t *testing.T) {
 		Status: "approved",
 		CreatedAt: time.Now(),
 	}
-	actual, err := tr.PutTransaction()
+	err := tr.PutTransaction()
 	if err != nil {
 		t.Error("error: ", err)
-	}
-	expected := "204"
-	if !strings.Contains(actual, expected) {
-		t.Error("PutTransaction(): expected %s, actual %s", expected, actual)
 	}
 }
