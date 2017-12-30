@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 	"strings"
-	"fmt"
 )
 
 func TestPutTransaction(t *testing.T) {
@@ -18,8 +17,7 @@ func TestPutTransaction(t *testing.T) {
 	}
 	actual, err := tr.PutTransaction()
 	if err != nil {
-		fmt.Errorf("error: ", err)
-		return
+		t.Error("error: ", err)
 	}
 	expected := "204"
 	if !strings.Contains(actual, expected) {
