@@ -18,6 +18,6 @@ func TestPutTransaction(t *testing.T) {
 	actual, _ := tr.PutTransaction()
 	expected := "204"
 	if !strings.Contains(actual, expected) {
-		t.Error("PutTransaction(): expected %s, actual ", expected, actual)
+		t.Error("PutTransaction(): expected %s, actual %s", expected, actual)
 	}
 }
