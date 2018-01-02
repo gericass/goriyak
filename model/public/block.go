@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"github.com/gericass/goriyak/model"
 	"net/http"
-	"bytes"
-	"errors"
 )
 
 // PublicBlock : bind the json of block for riak
@@ -34,9 +32,7 @@ func (p *PublicBlock) PutBlock() error {
 		return err
 	}
 	if res.StatusCode != http.StatusNoContent {
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(res.Body)
-		return errors.New(buf.String())
+		return model.HTTPError(res)
 	}
 	return nil
 }

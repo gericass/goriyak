@@ -4,10 +4,8 @@ import (
 	"time"
 	"encoding/json"
 	"github.com/gericass/goriyak/model"
-	"fmt"
 	"net/http"
-	"bytes"
-	"errors"
+	"io/ioutil"
 )
 
 // PublicNode : bind the json of node for riak
@@ -21,7 +19,23 @@ type PublicNode struct {
 	ParentServerID string    `json:"parent_server_id"`
 }
 
-// TODO implement GetNode
+func GetNode(key string) (*PublicNode, error) {
+	url := baseURL + "/buckets/node/keys/" + key
+	res, err := model.GetRequest(url)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, model.HTTPError(res)
+	}
+	jsonBytes, _ := ioutil.ReadAll(res.Body)
+	node := new(PublicNode)
+	err = json.Unmarshal(jsonBytes, node)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
 
 // PutNode : method for put new node to riak
 func (p *PublicNode) PutNode() error {
@@ -34,11 +48,9 @@ func (p *PublicNode) PutNode() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(res.StatusCode)
+
 	if res.StatusCode != http.StatusNoContent {
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(res.Body)
-		return errors.New(buf.String())
+		return model.HTTPError(res)
 	}
 	return nil
 }
@@ -52,9 +64,7 @@ func (p *PublicNode) DeleteNode() error {
 	}
 
 	if res.StatusCode != http.StatusNoContent {
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(res.Body)
-		return errors.New(buf.String())
+		return model.HTTPError(res)
 	}
 	return nil
 }

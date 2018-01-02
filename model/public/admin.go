@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"github.com/gericass/goriyak/model"
 	"net/http"
-	"errors"
-	"bytes"
 )
 
 // Admin : struct of administration node
@@ -30,9 +28,7 @@ func (p *Admin) PutAdmin() error {
 	}
 
 	if res.StatusCode != http.StatusNoContent {
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(res.Body)
-		return errors.New(buf.String())
+		return model.HTTPError(res)
 	}
 	return nil
 }
