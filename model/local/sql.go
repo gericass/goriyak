@@ -70,3 +70,20 @@ func DeleteTransactionByTime(time time.Time, tx *sql.Tx) error {
 		return nil
 	})
 }
+
+// UpdateTransactionStatus : to update transaction's status
+func UpdateTransactionStatus(name string, tx *sql.Tx) error {
+	return dbTransaction(tx, func(tx *sql.Tx) error {
+		query := "UPDATE `transaction` SET `status` = 'approved' WHERE `name` = ?"
+		stmt, err := tx.Prepare(query)
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		_, err = stmt.Exec(name)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+}
