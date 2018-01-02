@@ -48,7 +48,7 @@ func TestDeleteTransactions(t *testing.T) {
 	defer cnn.Close()
 	tx, err := cnn.Begin()
 
-	err = DeleteTransaction("testTransaction", tx)
+	err = DeleteTransactionByTime(time.Now(), tx)
 	if err != nil {
 		t.Error(err)
 	}
