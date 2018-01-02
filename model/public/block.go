@@ -3,7 +3,6 @@ package public
 import (
 	"time"
 	"encoding/json"
-	"github.com/gericass/goriyak/model"
 	"net/http"
 )
 
@@ -27,12 +26,12 @@ func (p *PublicBlock) PutBlock() error {
 		return err
 	}
 	url := baseURL + "/buckets/block/keys/" + p.ID
-	res, err := model.PutRequest(url, string(transaction))
+	res, err := PutRequest(url, string(transaction))
 	if err != nil {
 		return err
 	}
 	if res.StatusCode != http.StatusNoContent {
-		return model.HTTPError(res)
+		return HTTPError(res)
 	}
 	return nil
 }

@@ -3,7 +3,6 @@ package public
 import (
 	"time"
 	"encoding/json"
-	"github.com/gericass/goriyak/model"
 	"net/http"
 	"io/ioutil"
 )
@@ -22,12 +21,12 @@ type PublicNode struct {
 // GetNode : method for get node by key(ID)
 func GetNode(key string) (*PublicNode, error) {
 	url := baseURL + "/buckets/node/keys/" + key
-	res, err := model.GetRequest(url)
+	res, err := GetRequest(url)
 	if err != nil {
 		return nil, err
 	}
 	if res.StatusCode != http.StatusOK {
-		return nil, model.HTTPError(res)
+		return nil, HTTPError(res)
 	}
 	jsonBytes, _ := ioutil.ReadAll(res.Body)
 	node := new(PublicNode)
@@ -45,13 +44,13 @@ func (p *PublicNode) PutNode() error {
 		return err
 	}
 	url := baseURL + "/buckets/node/keys/" + p.ID
-	res, err := model.PutRequest(url, string(node))
+	res, err := PutRequest(url, string(node))
 	if err != nil {
 		return err
 	}
 
 	if res.StatusCode != http.StatusNoContent {
-		return model.HTTPError(res)
+		return HTTPError(res)
 	}
 	return nil
 }
@@ -59,13 +58,13 @@ func (p *PublicNode) PutNode() error {
 // DeleteNode : method for delete new node to riak
 func (p *PublicNode) DeleteNode() error {
 	url := baseURL + "/buckets/node/keys/" + p.ID
-	res, err := model.DeleteRequest(url)
+	res, err := DeleteRequest(url)
 	if err != nil {
 		return err
 	}
 
 	if res.StatusCode != http.StatusNoContent {
-		return model.HTTPError(res)
+		return HTTPError(res)
 	}
 	return nil
 }

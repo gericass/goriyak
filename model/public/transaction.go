@@ -3,7 +3,6 @@ package public
 import (
 	"time"
 	"encoding/json"
-	"github.com/gericass/goriyak/model"
 	"net/http"
 	"errors"
 	"bytes"
@@ -27,7 +26,7 @@ func (p *PublicTransaction) PutTransaction() error {
 		return err
 	}
 	url := baseURL + "/buckets/transaction/keys/" + p.ID
-	res, err := model.PutRequest(url, string(transaction))
+	res, err := PutRequest(url, string(transaction))
 	if err != nil {
 		return err
 	}

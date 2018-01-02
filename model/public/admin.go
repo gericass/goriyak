@@ -3,7 +3,6 @@ package public
 import (
 	"time"
 	"encoding/json"
-	"github.com/gericass/goriyak/model"
 	"net/http"
 	"io/ioutil"
 )
@@ -19,12 +18,12 @@ type Admin struct {
 // GetAdmin : method for get administration node by key(ID)
 func GetAdmin(key string) (*Admin, error) {
 	url := baseURL + "/buckets/admin/keys/" + key
-	res, err := model.GetRequest(url)
+	res, err := GetRequest(url)
 	if err != nil {
 		return nil, err
 	}
 	if res.StatusCode != http.StatusOK {
-		return nil, model.HTTPError(res)
+		return nil, HTTPError(res)
 	}
 	jsonBytes, _ := ioutil.ReadAll(res.Body)
 	admin := new(Admin)
@@ -42,13 +41,13 @@ func (p *Admin) PutAdmin() error {
 		return err
 	}
 	url := baseURL + "/buckets/admin/keys/" + p.ID
-	res, err := model.PutRequest(url, string(transaction))
+	res, err := PutRequest(url, string(transaction))
 	if err != nil {
 		return err
 	}
 
 	if res.StatusCode != http.StatusNoContent {
-		return model.HTTPError(res)
+		return HTTPError(res)
 	}
 	return nil
 }
