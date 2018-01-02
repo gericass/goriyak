@@ -17,7 +17,7 @@ type LocalTransaction struct {
 
 // GetTransactionsByTime : to get transactions by created_at column
 func GetTransactionsByTime(start time.Time, end time.Time, tx *sql.Tx) ([]*LocalTransaction, error) {
-	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`created_at` FROM `transaction` WHERE ? < `created_at` AND `created_at` < ?"
+	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`created_at` FROM `transaction` WHERE ? <= `created_at` AND `created_at` < ?"
 	rows, err := tx.Query(query, start, end)
 	if err != nil {
 		return nil, err
