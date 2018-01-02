@@ -4,7 +4,6 @@ import (
 	"time"
 	"encoding/json"
 	"github.com/gericass/goriyak/model"
-	"fmt"
 	"net/http"
 	"bytes"
 	"errors"

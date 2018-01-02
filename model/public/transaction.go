@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"errors"
 	"bytes"
-	"fmt"
 )
 
 // PublicTransaction : bind the json of transaction for riak
