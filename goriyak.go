@@ -7,6 +7,7 @@ import (
 	"log"
 	"github.com/gericass/goriyak/application/handler"
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const grpcPort = ":50051"
@@ -27,7 +28,7 @@ func main() {
 	s := grpc.NewServer()
 	db, err := connectDB()
 	if err != nil {
-		log.Println("failed to connect Database")
+		log.Println("failed to connect DB: ", err)
 	}
 	server := &handler.GoriyakServer{DB: db}
 	pb.RegisterAdminServer(s, server)
