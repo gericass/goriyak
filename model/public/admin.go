@@ -13,7 +13,7 @@ type Admin struct {
 	ID       string    `json:"id"`
 	IP       string    `json:"ip"`
 	Status   string    `json:"status"`
-	JoinedAt time.Time `json:"joined_at"`
+	JoinedAt *time.Time `json:"joined_at"`
 }
 
 // GetAdmin : method for get administration node by key(ID)
