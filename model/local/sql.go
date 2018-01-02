@@ -51,3 +51,20 @@ func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 		return nil
 	})
 }
+
+// DeleteTransaction : to delete transactions to MySQL transaction table
+func DeleteTransaction(name string, tx *sql.Tx) error {
+	return dbTransaction(tx, func(tx *sql.Tx) error {
+		query := "DELETE FROM `transaction` WHERE `name` = ?"
+		stmt, err := tx.Prepare(query)
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		_, err = stmt.Exec(name)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+}
