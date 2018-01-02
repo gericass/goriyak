@@ -30,6 +30,7 @@ func main() {
 	if err != nil {
 		log.Println("failed to connect DB: ", err)
 	}
+	defer db.Close()
 	server := &handler.GoriyakServer{DB: db}
 	pb.RegisterAdminServer(s, server)
 	pb.RegisterGoriyakServer(s, server)

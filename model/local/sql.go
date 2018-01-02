@@ -18,7 +18,11 @@ type LocalTransaction struct {
 }
 
 // GetTransactionsByTime : to get transactions by created_at column
-func GetTransactionsByTime(start time.Time, end time.Time, tx *sql.Tx) ([]*LocalTransaction, error) {
+func GetTransactionsByTime(start time.Time, end time.Time, db *sql.DB) ([]*LocalTransaction, error) {
+	tx, err := db.Begin()
+	if err != nil {
+		return nil, err
+	}
 	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`status`,`created_at`,`updated_at` FROM `transaction` WHERE ? <= `updated_at` AND `updated_at` < ? AND `status` = 'approved'"
 	rows, err := tx.Query(query, start, end)
 	if err != nil {
@@ -28,7 +32,11 @@ func GetTransactionsByTime(start time.Time, end time.Time, tx *sql.Tx) ([]*Local
 }
 
 // GetTransactionsByName : to get transactions by name column
-func GetTransactionsByName(name string, tx *sql.Tx) ([]*LocalTransaction, error) {
+func GetTransactionsByName(name string, db *sql.DB) ([]*LocalTransaction, error) {
+	tx, err := db.Begin()
+	if err != nil {
+		return nil, err
+	}
 	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`status`,`created_at`,`updated_at` FROM `transaction` WHERE `name` = ? LIMIT 2"
 	rows, err := tx.Query(query, name)
 	if err != nil {
@@ -38,7 +46,11 @@ func GetTransactionsByName(name string, tx *sql.Tx) ([]*LocalTransaction, error)
 }
 
 // PutTransaction : to put transactions to MySQL transaction table
-func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
+func (t *LocalTransaction) PutTransaction(db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
 	return dbTransaction(tx, func(tx *sql.Tx) error {
 		query := "INSERT INTO `transaction` (`name`, `send_node_id`, `receive_node_id`, `amount`, `status`, `created_at`, `updated_at`) values(?, ?, ?, ?, ?, ?, ?)"
 		stmt, err := tx.Prepare(query)
@@ -55,7 +67,11 @@ func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 }
 
 // DeleteTransactionByTime : to delete transactions to MySQL transaction table
-func DeleteTransactionByTime(time time.Time, tx *sql.Tx) error {
+func DeleteTransactionByTime(time time.Time, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
 	return dbTransaction(tx, func(tx *sql.Tx) error {
 		query := "DELETE FROM `transaction` WHERE `updated_at` <= ?"
 		stmt, err := tx.Prepare(query)
@@ -72,7 +88,11 @@ func DeleteTransactionByTime(time time.Time, tx *sql.Tx) error {
 }
 
 // UpdateTransactionStatus : to update transaction's status
-func UpdateTransactionStatus(name string, tx *sql.Tx) error {
+func UpdateTransactionStatus(name string, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
 	return dbTransaction(tx, func(tx *sql.Tx) error {
 		query := "UPDATE `transaction` SET `status` = 'approved' WHERE `name` = ?"
 		stmt, err := tx.Prepare(query)

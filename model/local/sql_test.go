@@ -13,9 +13,8 @@ func TestPutTransaction(t *testing.T) {
 		t.Error("connection error")
 	}
 	defer cnn.Close()
-	tx, err := cnn.Begin()
 	tr := &LocalTransaction{Name: "testTransaction", SendNodeID: "node1", ReceiveNodeID: "node2", Amount: 16.00, Status: "unapproved", CreatedAt: time.Now(), UpdatedAt: time.Now()}
-	err = tr.PutTransaction(tx)
+	err = tr.PutTransaction(cnn)
 	if err != nil {
 		t.Error(err)
 	}
@@ -27,9 +26,8 @@ func TestGetTransactionsByName(t *testing.T) {
 		t.Error("connection error")
 	}
 	defer cnn.Close()
-	tx, err := cnn.Begin()
 
-	tr, err := GetTransactionsByName("testTransaction", tx)
+	tr, err := GetTransactionsByName("testTransaction", cnn)
 	if err != nil {
 		t.Error(err)
 	}
@@ -46,9 +44,8 @@ func TestDeleteTransactions(t *testing.T) {
 		t.Error("connection error")
 	}
 	defer cnn.Close()
-	tx, err := cnn.Begin()
 
-	err = DeleteTransactionByTime(time.Now(), tx)
+	err = DeleteTransactionByTime(time.Now(), cnn)
 	if err != nil {
 		t.Error(err)
 	}
@@ -60,9 +57,8 @@ func TestUpdateTransactions(t *testing.T) {
 		t.Error("connection error")
 	}
 	defer cnn.Close()
-	tx, err := cnn.Begin()
 
-	err = UpdateTransactionStatus("testTransaction", tx)
+	err = UpdateTransactionStatus("testTransaction", cnn)
 	if err != nil {
 		t.Error(err)
 	}
