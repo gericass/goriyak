@@ -12,12 +12,14 @@ type LocalTransaction struct {
 	SendNodeID    string
 	ReceiveNodeID string
 	Amount        float64
+	Status        string
 	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 // GetTransactionsByTime : to get transactions by created_at column
 func GetTransactionsByTime(start time.Time, end time.Time, tx *sql.Tx) ([]*LocalTransaction, error) {
-	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`created_at` FROM `transaction` WHERE ? <= `created_at` AND `created_at` < ?"
+	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`status`,`created_at`,`updated_at` FROM `transaction` WHERE ? <= `updated_at` AND `updated_at` < ? AND `status` = 'approved'"
 	rows, err := tx.Query(query, start, end)
 	if err != nil {
 		return nil, err
@@ -27,7 +29,7 @@ func GetTransactionsByTime(start time.Time, end time.Time, tx *sql.Tx) ([]*Local
 
 // GetTransactionsByName : to get transactions by name column
 func GetTransactionsByName(name string, tx *sql.Tx) ([]*LocalTransaction, error) {
-	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`created_at` FROM `transaction` WHERE `name` = ? LIMIT 2"
+	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`status`,`created_at`,`updated_at` FROM `transaction` WHERE `name` = ? LIMIT 2"
 	rows, err := tx.Query(query, name)
 	if err != nil {
 		return nil, err
@@ -38,13 +40,13 @@ func GetTransactionsByName(name string, tx *sql.Tx) ([]*LocalTransaction, error)
 // PutTransaction : to put transactions to MySQL transaction table
 func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 	return dbTransaction(tx, func(tx *sql.Tx) error {
-		query := "INSERT INTO `transaction` (`name`, `send_node_id`, `receive_node_id`,`amount`,`created_at`) values(?, ?, ?, ?, ?)"
+		query := "INSERT INTO `transaction` (`name`, `send_node_id`, `receive_node_id`, `amount`, `status`, `created_at`, `updated_at`) values(?, ?, ?, ?, ?, ?, ?)"
 		stmt, err := tx.Prepare(query)
 		if err != nil {
 			return err
 		}
 		defer stmt.Close()
-		_, err = stmt.Exec(t.Name, t.SendNodeID, t.ReceiveNodeID, t.Amount, t.CreatedAt)
+		_, err = stmt.Exec(t.Name, t.SendNodeID, t.ReceiveNodeID, t.Amount, t.Status, t.CreatedAt, t.UpdatedAt)
 		if err != nil {
 			return err
 		}
@@ -55,7 +57,7 @@ func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 // DeleteTransactionByTime : to delete transactions to MySQL transaction table
 func DeleteTransactionByTime(time time.Time, tx *sql.Tx) error {
 	return dbTransaction(tx, func(tx *sql.Tx) error {
-		query := "DELETE FROM `transaction` WHERE `created_at` <= ?"
+		query := "DELETE FROM `transaction` WHERE `updated_at` <= ?"
 		stmt, err := tx.Prepare(query)
 		if err != nil {
 			return err

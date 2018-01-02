@@ -14,7 +14,7 @@ func TestPutTransaction(t *testing.T) {
 	}
 	defer cnn.Close()
 	tx, err := cnn.Begin()
-	tr := &LocalTransaction{Name: "testTransaction", SendNodeID: "node1", ReceiveNodeID: "node2", Amount: 16.00, CreatedAt: time.Now()}
+	tr := &LocalTransaction{Name: "testTransaction", SendNodeID: "node1", ReceiveNodeID: "node2", Amount: 16.00, Status: "approved", CreatedAt: time.Now(), UpdatedAt: time.Now()}
 	err = tr.PutTransaction(tx)
 	if err != nil {
 		t.Error(err)

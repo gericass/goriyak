@@ -4,5 +4,7 @@ CREATE TABLE transaction (
   send_node_id    VARCHAR(65) NOT NULL,
   receive_node_id VARCHAR(65) NOT NULL,
   amount          DOUBLE      NOT NULL,
-  created_at      DATETIME    NOT NULL
+  status          VARCHAR(10) NOT NULL,
+  created_at      DATETIME    NOT NULL,
+  updated_at      DATETIME    NOT NULL
 );
