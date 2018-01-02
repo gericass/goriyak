@@ -50,5 +50,4 @@ func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 		}
 		return nil
 	})
-
 }

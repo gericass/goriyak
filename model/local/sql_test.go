@@ -8,7 +8,7 @@ import (
 )
 
 func TestPutTransaction(t *testing.T) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(host:3306)/goriyak")
+	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak")
 	if err != nil {
 		t.Error("connection error")
 	}
