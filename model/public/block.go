@@ -11,12 +11,12 @@ import (
 type PublicBlock struct {
 	ID             string    `json:"id"`
 	TransactionIds []string  `json:"transaction_ids"`
-	StartedAt      *time.Time `json:"started_at"`
-	FinishedAt     *time.Time `json:"finished_at"`
+	StartedAt      time.Time `json:"started_at"`
+	FinishedAt     time.Time `json:"finished_at"`
 	Sign           []string  `json:"sign"`
 	PreviousHash   string    `json:"previous_hash"`
 	Nonce          string    `json:"nonce"`
-	CreatedAt      *time.Time `json:"created_at"`
+	CreatedAt      time.Time `json:"created_at"`
 	Difficulty     string    `json:"difficulty"`
 }
 

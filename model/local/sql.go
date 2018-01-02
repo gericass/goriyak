@@ -22,7 +22,7 @@ func GetTransactionsByTime(start time.Time, end time.Time, tx *sql.Tx) ([]*Local
 	if err != nil {
 		return nil, err
 	}
-	return ScanTransactions(rows)
+	return scanTransactions(rows)
 }
 
 // GetTransactionsByName : to get transactions by name column
@@ -32,9 +32,10 @@ func GetTransactionsByName(name string, tx *sql.Tx) ([]*LocalTransaction, error)
 	if err != nil {
 		return nil, err
 	}
-	return ScanTransactions(rows)
+	return scanTransactions(rows)
 }
 
+// PutTransaction : to put transactions to MySQL transaction table
 func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 	query := "INSERT INTO `transaction` (`id`, `name`, `send_node_id`, `receive_node_id`,`amount`,`created_at`) values(?, ?, ?, ?, ?, ?)"
 	stmt, err := tx.Prepare(query)
@@ -43,13 +44,13 @@ func (t *LocalTransaction) PutTransaction(tx *sql.Tx) error {
 	}
 	defer stmt.Close()
 	return dbTransaction(tx, func(tx *sql.Tx) error {
-		query := "INSERT INTO `transaction` (`id`, `name`, `send_node_id`, `receive_node_id`,`amount`,`created_at`) values(?, ?, ?, ?, ?, ?)"
+		query := "INSERT INTO `transaction` (`name`, `send_node_id`, `receive_node_id`,`amount`,`created_at`) values(?, ?, ?, ?, ?)"
 		stmt, err := tx.Prepare(query)
 		if err != nil {
 			return err
 		}
 		defer stmt.Close()
-		_, err = stmt.Exec(t.ID, t.Name, t.SendNodeID, t.ReceiveNodeID, t.Amount, t.CreatedAt)
+		_, err = stmt.Exec(t.Name, t.SendNodeID, t.ReceiveNodeID, t.Amount, t.CreatedAt)
 		if err != nil {
 			return err
 		}

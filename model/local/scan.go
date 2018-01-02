@@ -4,7 +4,7 @@ import (
 	"database/sql"
 )
 
-func ScanTransactions(rows *sql.Rows) ([]*LocalTransaction, error) {
+func scanTransactions(rows *sql.Rows) ([]*LocalTransaction, error) {
 	defer rows.Close()
 	transactions := make([]*LocalTransaction, 0)
 

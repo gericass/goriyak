@@ -17,7 +17,7 @@ type PublicTransaction struct {
 	ReceiveNodeID string    `json:"receive_node_id"`
 	Amount        float64   `json:"amount"`
 	Status        string    `json:"status"`
-	CreatedAt     *time.Time `json:"created_at"`
+	CreatedAt     time.Time `json:"created_at"`
 }
 
 // PutTransaction : method for put new transaction to riak

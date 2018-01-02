@@ -14,8 +14,8 @@ type PublicNode struct {
 	Name           string    `json:"name"`
 	Password       string    `json:"password"`
 	Salt           string    `json:"salt"`
-	JoinedAt       *time.Time `json:"joined_at"`
-	UpdatedAt      *time.Time `json:"updated_at"`
+	JoinedAt       time.Time `json:"joined_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 	ParentServerID string    `json:"parent_server_id"`
 }
 
