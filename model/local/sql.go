@@ -12,7 +12,7 @@ type LocalTransaction struct {
 	SendNodeID    string
 	ReceiveNodeID string
 	Amount        float64
-	CreatedAt     *time.Time
+	CreatedAt     time.Time
 }
 
 // GetTransactionsByTime : to get transactions by created_at column
