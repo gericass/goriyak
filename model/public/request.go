@@ -6,6 +6,7 @@ import (
 	"errors"
 )
 
+// HTTPError : handle the error caused by HTTP
 func HTTPError(res *http.Response) error {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(res.Body)
