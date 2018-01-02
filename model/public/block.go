@@ -34,7 +34,6 @@ func (p *PublicBlock) PutBlock() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(res.StatusCode)
 	if res.StatusCode != http.StatusNoContent {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(res.Body)
