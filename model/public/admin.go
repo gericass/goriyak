@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/gericass/goriyak/model"
 	"net/http"
+	"io/ioutil"
 )
 
 // Admin : struct of administration node
@@ -13,6 +14,25 @@ type Admin struct {
 	IP       string    `json:"ip"`
 	Status   string    `json:"status"`
 	JoinedAt time.Time `json:"joined_at"`
+}
+
+// GetAdmin : method for get administration node by key(ID)
+func GetAdmin(key string) (*Admin, error) {
+	url := baseURL + "/buckets/admin/keys/" + key
+	res, err := model.GetRequest(url)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, model.HTTPError(res)
+	}
+	jsonBytes, _ := ioutil.ReadAll(res.Body)
+	admin := new(Admin)
+	err = json.Unmarshal(jsonBytes, admin)
+	if err != nil {
+		return nil, err
+	}
+	return admin, nil
 }
 
 // PutAdmin : method for put new administration node to riak

@@ -19,6 +19,7 @@ type PublicNode struct {
 	ParentServerID string    `json:"parent_server_id"`
 }
 
+// GetNode : method for get node by key(ID)
 func GetNode(key string) (*PublicNode, error) {
 	url := baseURL + "/buckets/node/keys/" + key
 	res, err := model.GetRequest(url)
