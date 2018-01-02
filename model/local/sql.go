@@ -19,12 +19,9 @@ type LocalTransaction struct {
 
 // GetTransactionsByTime : to get transactions by created_at column
 func GetTransactionsByTime(start time.Time, end time.Time, db *sql.DB) ([]*LocalTransaction, error) {
-	tx, err := db.Begin()
-	if err != nil {
-		return nil, err
-	}
+
 	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`status`,`created_at`,`updated_at` FROM `transaction` WHERE ? <= `updated_at` AND `updated_at` < ? AND `status` = 'approved'"
-	rows, err := tx.Query(query, start, end)
+	rows, err := db.Query(query, start, end)
 	if err != nil {
 		return nil, err
 	}
@@ -33,16 +30,27 @@ func GetTransactionsByTime(start time.Time, end time.Time, db *sql.DB) ([]*Local
 
 // GetTransactionsByName : to get transactions by name column
 func GetTransactionsByName(name string, db *sql.DB) ([]*LocalTransaction, error) {
-	tx, err := db.Begin()
-	if err != nil {
-		return nil, err
-	}
+
 	query := "SELECT `id`,`name`,`send_node_id`,`receive_node_id`,`amount`,`status`,`created_at`,`updated_at` FROM `transaction` WHERE `name` = ? LIMIT 2"
-	rows, err := tx.Query(query, name)
+	rows, err := db.Query(query, name)
 	if err != nil {
 		return nil, err
 	}
 	return scanTransactions(rows)
+}
+
+// GetTransactionExists : to search transactions by name column
+func GetTransactionExists(name string, db *sql.DB) (bool, error) {
+	query := "SELECT count(*) FROM `transaction` WHERE `name` = ? LIMIT 2"
+	row := db.QueryRow(query, name)
+	count, err := scanCount(row)
+	if err != nil {
+		return false, err
+	}
+	if count < 1 {
+		return false, nil
+	}
+	return true, nil
 }
 
 // PutTransaction : to put transactions to MySQL transaction table

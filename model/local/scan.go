@@ -18,3 +18,11 @@ func scanTransactions(rows *sql.Rows) ([]*LocalTransaction, error) {
 	}
 	return transactions, nil
 }
+
+func scanCount(row *sql.Row) (int, error) {
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
