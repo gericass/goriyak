@@ -7,23 +7,18 @@ import (
 )
 
 // GoriyakServer : empty struct for implements proto.GoriyakServer
-type GoriyakServer struct {
+type GoriyakServer struct{
 	DB *sql.DB
 }
 
-// NewGoriyakClient : for register GoriyakServer
-func NewGoriyakServer() *GoriyakServer {
-	return &GoriyakServer{}
-}
-
 // RegisterNode : to register new node
-func (s *GoriyakServer) RegisterNode(c context.Context, r *pb.Node) (*pb.Status, error) {
+func (s *GoriyakServer) RegisterNode(c context.Context,r *pb.Node) (*pb.Status, error) {
 
 	return &pb.Status{Message: "Node Registered"}, nil
 }
 
 // DeleteNode : to delete node
-func (s *GoriyakServer) DeleteNode(c context.Context, r *pb.Node) (*pb.Status, error) {
+func (s *GoriyakServer) DeleteNode(c context.Context,r *pb.Node) (*pb.Status, error) {
 
 	return &pb.Status{Message: "Node Deleted"}, nil
 }
