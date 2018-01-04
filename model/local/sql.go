@@ -96,19 +96,19 @@ func DeleteTransactionByTime(time time.Time, db *sql.DB) error {
 }
 
 // UpdateTransactionStatus : to update transaction's status
-func UpdateTransactionStatus(name string, db *sql.DB) error {
+func UpdateTransactionStatus(name string, currentTime time.Time, db *sql.DB) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 	return dbTransaction(tx, func(tx *sql.Tx) error {
-		query := "UPDATE `transaction` SET `status` = 'approved' WHERE `name` = ?"
+		query := "UPDATE `transaction` SET `status` = 'approved', `updated_at` = ? WHERE `name` = ?"
 		stmt, err := tx.Prepare(query)
 		if err != nil {
 			return err
 		}
 		defer stmt.Close()
-		_, err = stmt.Exec(name)
+		_, err = stmt.Exec(name, currentTime)
 		if err != nil {
 			return err
 		}

@@ -15,6 +15,10 @@ type Admin struct {
 	JoinedAt time.Time `json:"joined_at"`
 }
 
+type AdminKeys struct {
+	Keys []string `json:"keys"`
+}
+
 // GetAdmin : method for get administration node by key(ID)
 func GetAdmin(key string) (*Admin, error) {
 	url := baseURL + "/buckets/admin/keys/" + key
@@ -32,6 +36,25 @@ func GetAdmin(key string) (*Admin, error) {
 		return nil, err
 	}
 	return admin, nil
+}
+
+// GetAdminKey : method for get administration node's key
+func GetAdminKey() (*AdminKeys, error) {
+	url := baseURL + "/buckets/admin/keys?keys=true"
+	res, err := GetRequest(url)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, HTTPError(res)
+	}
+	jsonBytes, _ := ioutil.ReadAll(res.Body)
+	keys := new(AdminKeys)
+	err = json.Unmarshal(jsonBytes, keys)
+	if err != nil {
+		return nil, err
+	}
+	return keys, nil
 }
 
 // PutAdmin : method for put new administration node to riak
