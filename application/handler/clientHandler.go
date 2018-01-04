@@ -4,6 +4,7 @@ import (
 	"golang.org/x/net/context"
 	pb "github.com/gericass/goriyak/proto"
 	"database/sql"
+	"github.com/gericass/goriyak/domain"
 )
 
 // GoriyakServer : empty struct for implements proto.GoriyakServer
@@ -31,7 +32,9 @@ func (s *GoriyakServer) Login(ctx context.Context, r *pb.Node) (*pb.Status, erro
 
 // PostTransaction : registering and approving new transaction
 func (s *GoriyakServer) PostTransactionFromClient(ctx context.Context, r *pb.TransactionRequest) (*pb.Status, error) {
-	// WIP
+	if err := domain.ClientTransactionRequestController(r, s.DB); err != nil {
+		return &pb.Status{Message: "Transaction transfer failed"}, err
+	}
 	return &pb.Status{Message: "Transaction transfer"}, nil
 }
 
