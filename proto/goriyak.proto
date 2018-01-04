@@ -24,7 +24,8 @@ message Transaction {
     string send_node_id = 2;
     string receive_node_id = 3;
     double amount = 4;
-    google.protobuf.Timestamp created_at = 5;
+    string status = 5;
+    google.protobuf.Timestamp created_at = 6;
 }
 
 // post from client to server
