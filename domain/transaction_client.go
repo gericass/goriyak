@@ -13,7 +13,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 )
 
-func generateUniqueKey(r *pb.TransactionRequest) string {
+func generateUniqueKeyClient(r *pb.TransactionRequest) string {
 	key := r.Name + r.SendNodeId + r.ReceiveNodeId
 	hash := sha256.Sum256([]byte(key))
 	return hex.EncodeToString(hash[:])
@@ -21,7 +21,7 @@ func generateUniqueKey(r *pb.TransactionRequest) string {
 
 func saveTransactionToRiak(r *pb.TransactionRequest, currentTime time.Time) error {
 	tr := &public.PublicTransaction{
-		ID:            generateUniqueKey(r),
+		ID:            generateUniqueKeyClient(r),
 		Name:          r.Name,
 		SendNodeID:    r.SendNodeId,
 		ReceiveNodeID: r.ReceiveNodeId,
@@ -91,7 +91,7 @@ func multicastTransaction(r *pb.TransactionRequest, currentTime time.Time) error
 	return nil
 }
 
-func transferTransaction(r *pb.TransactionRequest, currentTime time.Time) error {
+func transferTransaction(r *pb.TransactionRequest) error {
 	receiveNode, err := public.GetNode(r.ReceiveNodeId)
 	if err != nil {
 		return err
@@ -106,16 +106,13 @@ func transferTransaction(r *pb.TransactionRequest, currentTime time.Time) error 
 	}
 	defer conn.Close()
 	c := pb.NewAdminClient(conn)
-	timeProto, err := ptypes.TimestampProto(currentTime)
-	if err != nil {
-		return err
-	}
+
 	tr := &pb.Transaction{
 		Name:          r.Name,
 		SendNodeId:    r.SendNodeId,
 		ReceiveNodeId: r.ReceiveNodeId,
 		Amount:        r.Amount,
-		CreatedAt:     timeProto,
+		CreatedAt:     r.CreatedAt,
 	}
 
 	if _, err := c.PostTransactionFromServer(context.Background(), tr); err != nil {
@@ -143,7 +140,7 @@ func ClientTransactionRequestController(r *pb.TransactionRequest, db *sql.DB) er
 			return err
 		}
 	} else {
-		if err := transferTransaction(r, currentTime); err != nil {
+		if err := transferTransaction(r); err != nil {
 			return err
 		}
 	}
