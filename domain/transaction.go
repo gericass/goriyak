@@ -123,6 +123,7 @@ func transferTransaction(r *pb.TransactionRequest, currentTime time.Time) error 
 	return nil
 }
 
+// ClientTransactionRequestController : handle the transaction sent from client
 func ClientTransactionRequestController(r *pb.TransactionRequest, db *sql.DB) error {
 	exists, err := local.GetTransactionExists(r.Name, db)
 	if err != nil {
