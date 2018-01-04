@@ -79,6 +79,7 @@ func multicastTransaction(r *pb.TransactionRequest, currentTime time.Time) error
 		SendNodeId:    r.SendNodeId,
 		ReceiveNodeId: r.ReceiveNodeId,
 		Amount:        r.Amount,
+		Status:        "approved",
 		CreatedAt:     timeProto,
 	}
 	for _, v := range admins {
