@@ -18,7 +18,7 @@ func TestGetNode(t *testing.T) {
 }
 
 func TestPutNode(t *testing.T) {
-	tr := &PublicNode{ID: "test5"}
+	tr := &PublicNode{ID: "node5", ParentServerID: "192.168.33.12"}
 	err := tr.PutNode()
 	if err != nil {
 		t.Error("error: ", err)
