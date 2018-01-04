@@ -88,7 +88,39 @@ func multicastTransaction(r *pb.TransactionRequest, currentTime time.Time) error
 		}
 	}
 	return nil
+}
 
+func transferTransaction(r *pb.TransactionRequest, currentTime time.Time) error {
+	receiveNode, err := public.GetNode(r.ReceiveNodeId)
+	if err != nil {
+		return err
+	}
+	admin, err := public.GetAdmin(receiveNode.ParentServerID)
+	if err != nil {
+		return err
+	}
+	conn, err := grpc.Dial(admin.IP+":50051", grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+	c := pb.NewAdminClient(conn)
+	timeProto, err := ptypes.TimestampProto(currentTime)
+	if err != nil {
+		return err
+	}
+	tr := &pb.Transaction{
+		Name:          r.Name,
+		SendNodeId:    r.SendNodeId,
+		ReceiveNodeId: r.ReceiveNodeId,
+		Amount:        r.Amount,
+		CreatedAt:     timeProto,
+	}
+
+	if _, err := c.PostTransactionFromServer(context.Background(), tr); err != nil {
+		return err
+	}
+	return nil
 }
 
 func ClientTransactionRequestController(r *pb.TransactionRequest, db *sql.DB) error {
@@ -97,12 +129,21 @@ func ClientTransactionRequestController(r *pb.TransactionRequest, db *sql.DB) er
 		return err
 	}
 	currentTime := time.Now().UTC()
+
 	if exists {
-		saveTransactionToRiak(r, currentTime)
-		local.UpdateTransactionStatus(r.Name, currentTime, db)
-		multicastTransaction(r, currentTime)
+		if err := saveTransactionToRiak(r, currentTime); err != nil {
+			return err
+		}
+		if err := local.UpdateTransactionStatus(r.Name, currentTime, db); err != nil {
+			return err
+		}
+		if err := multicastTransaction(r, currentTime); err != nil {
+			return err
+		}
 	} else {
-		// TODO implements Not Exist Flow
+		if err := transferTransaction(r, currentTime); err != nil {
+			return err
+		}
 	}
 	return err
 }
