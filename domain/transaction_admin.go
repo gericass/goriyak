@@ -7,6 +7,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"github.com/golang/protobuf/ptypes"
+	"time"
+	"github.com/gericass/goriyak/model/public"
 )
 
 func generateUniqueKeyAdmin(r *pb.Transaction) string {
@@ -35,14 +37,50 @@ func saveTransactionLocal(r *pb.Transaction, db *sql.DB) error {
 	return nil
 }
 
+func saveTransactionToRiakAdmin(r *pb.Transaction, currentTime time.Time) error {
+	tr := &public.PublicTransaction{
+		ID:            generateUniqueKeyAdmin(r),
+		Name:          r.Name,
+		SendNodeID:    r.SendNodeId,
+		ReceiveNodeID: r.ReceiveNodeId,
+		Amount:        r.Amount,
+		Status:        "approved",
+		CreatedAt:     currentTime,
+	}
+	if err := tr.PutTransaction(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// AdminTransactionRequestController : handle the transaction sent from admin
 func AdminTransactionRequestController(r *pb.Transaction, db *sql.DB) error {
+	currentTime := time.Now().UTC()
 
 	if r.Status == "approved" {
 		if err := saveTransactionLocal(r, db); err != nil {
 			return err
 		}
 	} else {
-		// TODO implements flow that transaction is unapproved
+		exists, err := local.GetTransactionExists(r.Name, db)
+		if err != nil {
+			return err
+		}
+		if exists {
+			if err := saveTransactionToRiakAdmin(r, currentTime); err != nil {
+				return err
+			}
+			if err := local.UpdateTransactionStatus(r.Name, currentTime, db); err != nil {
+				return err
+			}
+			if err := MulticastTransactionAdmin(r, currentTime); err != nil {
+				return err
+			}
+		} else {
+			if err := saveTransactionLocal(r, db); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }

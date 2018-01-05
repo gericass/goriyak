@@ -10,7 +10,6 @@ import (
 	"time"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"github.com/golang/protobuf/ptypes"
 )
 
 func generateUniqueKeyClient(r *pb.TransactionRequest) string {
@@ -31,62 +30,6 @@ func saveTransactionToRiak(r *pb.TransactionRequest, currentTime time.Time) erro
 	}
 	if err := tr.PutTransaction(); err != nil {
 		return err
-	}
-	return nil
-}
-
-func getAdminIPs() ([]*public.Admin, error) {
-	keys, err := public.GetAdminKey()
-	if err != nil {
-		return []*public.Admin{}, nil
-	}
-	admins := make([]*public.Admin, 0)
-	for _, v := range keys.Keys {
-		admin, err := public.GetAdmin(v)
-		if err != nil {
-			return []*public.Admin{}, err
-		}
-		admins = append(admins, admin)
-	}
-	return admins, nil
-}
-
-func broadcastTransaction(ip string, tr *pb.Transaction) error {
-	conn, err := grpc.Dial(ip+":50051", grpc.WithInsecure())
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	c := pb.NewAdminClient(conn)
-
-	if _, err := c.PostTransactionFromServer(context.Background(), tr); err != nil {
-		return err
-	}
-	return nil
-}
-
-func multicastTransaction(r *pb.TransactionRequest, currentTime time.Time) error {
-	admins, err := getAdminIPs()
-	if err != nil {
-		return err
-	}
-	timeProto, err := ptypes.TimestampProto(currentTime)
-	if err != nil {
-		return err
-	}
-	tr := &pb.Transaction{
-		Name:          r.Name,
-		SendNodeId:    r.SendNodeId,
-		ReceiveNodeId: r.ReceiveNodeId,
-		Amount:        r.Amount,
-		Status:        "approved",
-		CreatedAt:     timeProto,
-	}
-	for _, v := range admins {
-		err := broadcastTransaction(v.IP, tr)
-		if err != nil {
-			return err
-		}
 	}
 	return nil
 }
@@ -136,7 +79,7 @@ func ClientTransactionRequestController(r *pb.TransactionRequest, db *sql.DB) er
 		if err := local.UpdateTransactionStatus(r.Name, currentTime, db); err != nil {
 			return err
 		}
-		if err := multicastTransaction(r, currentTime); err != nil {
+		if err := MulticastTransactionClient(r, currentTime); err != nil {
 			return err
 		}
 	} else {
