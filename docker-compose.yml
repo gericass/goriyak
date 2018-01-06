@@ -1,0 +1,21 @@
+goriyak:
+  image: gericass/goriyak-golang
+  volumes:
+    - ".:/go/src/app"
+    - "./go:/go"
+  environment:
+    DSN: docker
+  links:
+    - mysql:local
+    - riak:public
+
+mysql:
+  image: mysql:5.7
+  environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: goriyak
+
+
+riak:
+  image: gericass/goriyak-riak
+

@@ -3,13 +3,26 @@ package local
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
+	"os"
 )
 
 func ConnectDB() (*sql.DB, error) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
-	if err != nil {
-		return nil, err
+	dsn := os.Getenv("DSN")
+	var cnn *sql.DB
+	var err error
+	if dsn == "docker" {
+		cnn, err = sql.Open("mysql", "root:mysql@tcp(local:13306)/goriyak?parseTime=true")
+		if err != nil {
+			return nil, err
+		}
+
+	} else {
+		cnn, err = sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return cnn, nil
 }
 
