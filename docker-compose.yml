@@ -15,7 +15,6 @@ mysql:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: goriyak
 
-
 riak:
   image: gericass/goriyak-riak
 
