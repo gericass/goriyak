@@ -6,19 +6,11 @@ import (
 	pb "github.com/gericass/goriyak/proto"
 	"log"
 	"github.com/gericass/goriyak/application/handler"
-	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gericass/goriyak/model/local"
 )
 
 const grpcPort = ":50051"
-
-func connectDB() (*sql.DB, error) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
-	if err != nil {
-		return nil, err
-	}
-	return cnn, nil
-}
 
 func main() {
 	lis, err := net.Listen("tcp", grpcPort)
@@ -26,7 +18,7 @@ func main() {
 		log.Println("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	db, err := connectDB()
+	db, err := local.ConnectDB()
 	if err != nil {
 		log.Println("failed to connect DB: ", err)
 	}
