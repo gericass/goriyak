@@ -5,6 +5,8 @@ goriyak:
     - "./go:/go"
   environment:
     DSN: docker
+  ports:
+    - "50051:50051"
   links:
     - mysql:local
     - riak:public
