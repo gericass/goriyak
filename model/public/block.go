@@ -4,6 +4,7 @@ import (
 	"time"
 	"encoding/json"
 	"net/http"
+	"io/ioutil"
 )
 
 // PublicBlock : bind the json of block for riak
@@ -13,10 +14,11 @@ type PublicBlock struct {
 	StartedAt      time.Time `json:"started_at"`
 	FinishedAt     time.Time `json:"finished_at"`
 	Sign           []string  `json:"sign"`
-	PreviousHash   string    `json:"previous_hash"`
 	Nonce          string    `json:"nonce"`
 	CreatedAt      time.Time `json:"created_at"`
 	Difficulty     string    `json:"difficulty"`
+	Hash           string    `json:"hash"`
+	PreviousHash   string    `json:"previous_hash"`
 }
 
 // PutBlock : method for put new block to riak
@@ -34,4 +36,23 @@ func (p *PublicBlock) PutBlock() error {
 		return HTTPError(res)
 	}
 	return nil
+}
+
+// GetBlock : method for get block by key(ID)
+func GetBlock(key string) (*PublicBlock, error) {
+	url := baseURL + "/buckets/block/keys/" + key
+	res, err := GetRequest(url)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, HTTPError(res)
+	}
+	jsonBytes, _ := ioutil.ReadAll(res.Body)
+	block := new(PublicBlock)
+	err = json.Unmarshal(jsonBytes, block)
+	if err != nil {
+		return nil, err
+	}
+	return block, nil
 }

@@ -51,13 +51,13 @@ message BlockRequest {}
 // for mining
 message Block {
     message Transaction {
-        int64 id = 1;
-        int64 send_node_id = 2;
-        int64 receive_node_id = 3;
+        string id = 1;
+        string send_node_id = 2;
+        string receive_node_id = 3;
         double amount = 4;
         google.protobuf.Timestamp created_at = 5;
     }
-    int64 id = 1;
+    string id = 1;
     repeated Transaction transactions = 2;
     google.protobuf.Timestamp started_at = 3;
     google.protobuf.Timestamp finished_at = 4;

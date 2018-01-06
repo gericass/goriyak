@@ -40,8 +40,11 @@ func (s *GoriyakServer) PostTransactionFromClient(ctx context.Context, r *pb.Tra
 
 // GetBlock : returns Block for mining by client
 func (s *GoriyakServer) GetBlock(ctx context.Context, r *pb.BlockRequest) (*pb.Block, error) {
-
-	return &pb.Block{}, nil
+	block, err := domain.ClientBlockController(s.DB)
+	if err != nil {
+		return &pb.Block{}, err
+	}
+	return block, nil
 }
 
 // SuccessMining : post the result of mining by client
