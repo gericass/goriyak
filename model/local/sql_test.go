@@ -57,8 +57,9 @@ func TestUpdateTransactions(t *testing.T) {
 		t.Error("connection error")
 	}
 	defer cnn.Close()
+	currentTime := time.Now().UTC()
 
-	err = UpdateTransactionStatus("testTransaction", cnn)
+	err = UpdateTransactionStatus("testTransaction", currentTime, cnn)
 	if err != nil {
 		t.Error(err)
 	}
