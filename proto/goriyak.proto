@@ -75,7 +75,8 @@ message MiningResult {
     google.protobuf.Timestamp finished_at = 3;
     string hash = 4;
     string nonce = 5;
-    string name = 6; // name of mined node
+    repeated string sign = 6;
+    string name = 7; // name of mined node
 }
 
 // uses only in response
