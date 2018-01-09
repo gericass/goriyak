@@ -1,9 +1,9 @@
 package domain
 
 import (
+	"fmt"
 	"testing"
 	"time"
-	"fmt"
 )
 
 func TestParseTime(t *testing.T) {

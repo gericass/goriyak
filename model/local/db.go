@@ -1,8 +1,8 @@
 package local
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"os"
 )
 

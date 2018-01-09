@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"golang.org/x/net/context"
-	pb "github.com/gericass/goriyak/proto"
 	"database/sql"
 	"github.com/gericass/goriyak/domain"
+	pb "github.com/gericass/goriyak/proto"
+	"golang.org/x/net/context"
 )
 
 // GoriyakServer : empty struct for implements proto.GoriyakServer

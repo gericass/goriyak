@@ -1,11 +1,11 @@
 package public
 
 import (
-	"time"
-	"encoding/json"
-	"net/http"
-	"errors"
 	"bytes"
+	"encoding/json"
+	"errors"
+	"net/http"
+	"time"
 )
 
 // PublicTransaction : bind the json of transaction for riak

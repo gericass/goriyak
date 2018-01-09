@@ -1,18 +1,18 @@
 package main
 
 import (
-	"net"
-	"google.golang.org/grpc"
-	pb "github.com/gericass/goriyak/proto"
-	"log"
+	"database/sql"
 	"github.com/gericass/goriyak/application/handler"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/gericass/goriyak/model/local"
+	pb "github.com/gericass/goriyak/proto"
+	_ "github.com/go-sql-driver/mysql"
+	"google.golang.org/grpc"
+	"log"
+	"net"
 	"os"
+	"os/exec"
 	"os/signal"
 	"syscall"
-	"os/exec"
-	"database/sql"
 )
 
 const grpcPort = ":50051"

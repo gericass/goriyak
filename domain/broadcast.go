@@ -1,12 +1,12 @@
 package domain
 
 import (
-	"time"
-	"github.com/golang/protobuf/ptypes"
-	"google.golang.org/grpc"
-	"golang.org/x/net/context"
 	"github.com/gericass/goriyak/model/public"
 	pb "github.com/gericass/goriyak/proto"
+	"github.com/golang/protobuf/ptypes"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"time"
 )
 
 // MulticastTransactionAdmin : multicast transaction from admin to other admin

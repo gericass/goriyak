@@ -1,9 +1,9 @@
 package public
 
 import (
-	"net/http"
 	"bytes"
 	"errors"
+	"net/http"
 )
 
 // HTTPError : handle the error caused by HTTP

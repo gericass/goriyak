@@ -1,11 +1,11 @@
 package domain
 
 import (
-	"testing"
-	pb "github.com/gericass/goriyak/proto"
-	"time"
-	"github.com/golang/protobuf/ptypes"
 	"database/sql"
+	pb "github.com/gericass/goriyak/proto"
+	"github.com/golang/protobuf/ptypes"
+	"testing"
+	"time"
 )
 
 func TestClientTransactionRequestController(t *testing.T) {

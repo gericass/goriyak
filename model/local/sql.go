@@ -1,8 +1,8 @@
 package local
 
 import (
-	"time"
 	"database/sql"
+	"time"
 )
 
 // LocalTransaction : struct for binding transaction of MySQL

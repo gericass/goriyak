@@ -1,10 +1,10 @@
 package public
 
 import (
-	"time"
 	"encoding/json"
-	"net/http"
 	"io/ioutil"
+	"net/http"
+	"time"
 )
 
 // PublicNode : bind the json of node for riak

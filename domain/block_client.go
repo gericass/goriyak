@@ -1,15 +1,15 @@
 package domain
 
 import (
-	"time"
-	"strconv"
-	pb "github.com/gericass/goriyak/proto"
-	"github.com/gericass/goriyak/model/local"
-	"database/sql"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
-	"github.com/golang/protobuf/ptypes"
+	"github.com/gericass/goriyak/model/local"
 	"github.com/gericass/goriyak/model/public"
+	pb "github.com/gericass/goriyak/proto"
+	"github.com/golang/protobuf/ptypes"
+	"strconv"
+	"time"
 )
 
 type timeSet struct {

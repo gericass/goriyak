@@ -1,14 +1,14 @@
 package domain
 
 import (
-	"database/sql"
-	pb "github.com/gericass/goriyak/proto"
-	"github.com/gericass/goriyak/model/local"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
+	"github.com/gericass/goriyak/model/local"
+	"github.com/gericass/goriyak/model/public"
+	pb "github.com/gericass/goriyak/proto"
 	"github.com/golang/protobuf/ptypes"
 	"time"
-	"github.com/gericass/goriyak/model/public"
 )
 
 func generateUniqueKeyAdmin(r *pb.Transaction) string {

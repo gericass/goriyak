@@ -1,15 +1,15 @@
 package domain
 
 import (
-	pb "github.com/gericass/goriyak/proto"
-	"github.com/gericass/goriyak/model/local"
-	"database/sql"
-	"github.com/gericass/goriyak/model/public"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
-	"time"
+	"github.com/gericass/goriyak/model/local"
+	"github.com/gericass/goriyak/model/public"
+	pb "github.com/gericass/goriyak/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"time"
 )
 
 func generateUniqueKeyClient(r *pb.TransactionRequest) string {
