@@ -11,28 +11,27 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"fmt"
+	"os/exec"
+	"database/sql"
 )
 
 const grpcPort = ":50051"
 
-func main() {
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGINT)
-	// TODO implements Graceful shutdown
-	go func() {
-		for {
-			s := <-signalChan
-			switch s {
-			// kill -SIGHUP XXXX
-			case syscall.SIGHUP:
-				fmt.Println("hungup")
-				// kill -SIGINT XXXX or Ctrl+c
-			case syscall.SIGINT:
-				fmt.Println("Warikomi")
+func gracefulShutdown(db *sql.DB, signalChan chan os.Signal) {
+	for {
+		s := <-signalChan
+		switch s {
+		case syscall.SIGINT:
+			db.Close()
+			if err := exec.Command("riak-admin", "cluster", "leave").Run(); err != nil {
+				log.Printf("riak error: %v\n", err)
 			}
+			log.Println("leaved")
 		}
-	}()
+	}
+}
+
+func main() {
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
 		log.Println("failed to listen: %v", err)
@@ -42,6 +41,9 @@ func main() {
 	if err != nil {
 		log.Println("failed to connect DB: ", err)
 	}
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT)
+	go gracefulShutdown(db, signalChan)
 	defer db.Close()
 	server := &handler.GoriyakServer{DB: db}
 	pb.RegisterAdminServer(s, server)
