@@ -34,12 +34,12 @@ func gracefulShutdown(db *sql.DB, signalChan chan os.Signal) {
 func main() {
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
-		log.Println("failed to listen: %v", err)
+		log.Printf("failed to listen: %v\n", err)
 	}
 	s := grpc.NewServer()
 	db, err := local.ConnectDB()
 	if err != nil {
-		log.Println("failed to connect DB: ", err)
+		log.Printf("failed to connect DB: %v ", err)
 	}
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT)
