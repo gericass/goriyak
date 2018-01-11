@@ -10,6 +10,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"strconv"
 	"time"
+	"encoding/base64"
 )
 
 type timeSet struct {
@@ -24,9 +25,9 @@ func generateTransactionID(r *local.LocalTransaction) string {
 }
 
 func (t *timeSet) generateBlockID() string {
-	seed := t.start.String() + t.end.String()
-	hash := sha256.Sum256([]byte(seed))
-	return hex.EncodeToString(hash[:])
+	seed := t.start.String() + " : " + t.end.String()
+	str := base64.StdEncoding.EncodeToString([]byte(seed))
+	return str
 }
 
 func parseTime(currentTime time.Time) (*timeSet, error) {
