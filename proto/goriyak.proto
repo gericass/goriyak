@@ -71,12 +71,10 @@ message Block {
 // post from client to server
 message MiningResult {
     string block_id = 1;
-    google.protobuf.Timestamp started_at = 2;
-    google.protobuf.Timestamp finished_at = 3;
-    string hash = 4;
-    string nonce = 5;
-    repeated string sign = 6;
-    string name = 7; // name of mined node
+    string hash = 2;
+    string nonce = 3;
+    repeated string sign = 4;
+    string name = 5; // name of mined node
 }
 
 // uses only in response
