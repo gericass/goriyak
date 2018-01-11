@@ -16,6 +16,10 @@ mysql:
   environment:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: goriyak
+  volumes:
+    - "./model/local/sql/:/docker-entrypoint-initdb.d"
+  expose:
+    - "3306"
 
 riak:
   image: gericass/goriyak-riak

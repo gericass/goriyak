@@ -11,7 +11,7 @@ func ConnectDB() (*sql.DB, error) {
 	var cnn *sql.DB
 	var err error
 	if dsn == "docker" {
-		cnn, err = sql.Open("mysql", "root:mysql@tcp(local:13306)/goriyak?parseTime=true")
+		cnn, err = sql.Open("mysql", "root:mysql@tcp(local:3306)/goriyak?parseTime=true")
 		if err != nil {
 			return nil, err
 		}
