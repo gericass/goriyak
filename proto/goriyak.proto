@@ -5,17 +5,25 @@ package proto;
 import "google/protobuf/timestamp.proto";
 
 service Goriyak {
-    rpc RegisterNode(Node) returns (Status){}
-    rpc DeleteNode(Node) returns (Status){}
-    rpc Login(Node) returns (Status){}
-    rpc PostTransactionFromClient(TransactionRequest) returns (Status){}
-    rpc GetBlock(BlockRequest) returns (Block){} 
-    rpc PostMiningResult(MiningResult) returns (Status){}
+    rpc RegisterNode (Node) returns (Status) {
+    }
+    rpc DeleteNode (Node) returns (Status) {
+    }
+    rpc Login (Node) returns (Status) {
+    }
+    rpc PostTransactionFromClient (TransactionRequest) returns (Status) {
+    }
+    rpc GetBlock (BlockRequest) returns (Block) {
+    }
+    rpc PostMiningResult (MiningResult) returns (Status) {
+    }
 }
 
 service Admin {
-    rpc PostBlock(MiningResult) returns (Status){}
-    rpc PostTransactionFromServer(Transaction) returns (Status){}
+    rpc PostBlock (MiningResult) returns (Status) {
+    }
+    rpc PostTransactionFromServer (Transaction) returns (Status) {
+    }
 }
 
 // confirm between server
@@ -46,7 +54,8 @@ message Node {
 }
 
 // request for start mining
-message BlockRequest {}
+message BlockRequest {
+}
 
 // for mining
 message Block {
@@ -74,7 +83,8 @@ message MiningResult {
     string hash = 2;
     string nonce = 3;
     repeated string sign = 4;
-    string name = 5; // name of mined node
+    repeated string check = 5;
+    string name = 6; // name of mined node
 }
 
 // uses only in response
