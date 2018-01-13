@@ -2,8 +2,10 @@ package local
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"os"
+
+	"github.com/gericass/goriyak/setting"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func ConnectDB() (*sql.DB, error) {
@@ -17,7 +19,11 @@ func ConnectDB() (*sql.DB, error) {
 		}
 
 	} else {
-		cnn, err = sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
+		user := setting.ServerConfig.Mysql.User
+		password := setting.ServerConfig.Mysql.Password
+		host := setting.ServerConfig.Mysql.Host
+		port := setting.ServerConfig.Mysql.Port
+		cnn, err = sql.Open("mysql", user+":"+password+"@tcp("+host+":"+port+")/goriyak?parseTime=true")
 		if err != nil {
 			return nil, err
 		}

@@ -1,0 +1,8 @@
+IP= "127.0.0.1"
+Name = "goriyak-node1"
+
+[mysql]
+User = "root"
+Password = "mysql"
+Host = "127.0.0.1"
+Port = "13306"
