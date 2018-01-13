@@ -18,7 +18,7 @@ type MySQL struct {
 var ServerConfig Server
 
 func Setting() error {
-	if _, err := toml.Decode("./config.toml", &ServerConfig); err != nil {
+	if _, err := toml.DecodeFile("../config.toml", &ServerConfig); err != nil {
 		return err
 	}
 	return nil
