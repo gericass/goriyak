@@ -42,7 +42,7 @@ func TestGetTransactionsByName(t *testing.T) {
 }
 
 func TestDeleteTransactions(t *testing.T) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
+	cnn, err := sql.Open("mysql", "root:mysql@tcp(local:3306)/goriyak?parseTime=true")
 	if err != nil {
 		t.Error("connection error")
 	}
@@ -55,7 +55,7 @@ func TestDeleteTransactions(t *testing.T) {
 }
 
 func TestUpdateTransactions(t *testing.T) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
+	cnn, err := sql.Open("mysql", "root:mysql@tcp(local:3306)/goriyak?parseTime=true")
 	if err != nil {
 		t.Error("connection error")
 	}
