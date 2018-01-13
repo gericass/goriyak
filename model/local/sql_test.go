@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"testing"
+        "fmt"
 	"time"
 )
 
 func TestPutTransaction(t *testing.T) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
+	cnn, err := sql.Open("mysql", "root:mysql@tcp(local:3306)/goriyak?parseTime=true")
 	if err != nil {
 		t.Error("connection error")
 	}
@@ -21,7 +22,7 @@ func TestPutTransaction(t *testing.T) {
 }
 
 func TestGetTransactionsByName(t *testing.T) {
-	cnn, err := sql.Open("mysql", "root:mysql@tcp(127.0.0.1:13306)/goriyak?parseTime=true")
+	cnn, err := sql.Open("mysql", "root:mysql@tcp(local:3306)/goriyak?parseTime=true")
 	if err != nil {
 		t.Error("connection error")
 	}
@@ -33,6 +34,8 @@ func TestGetTransactionsByName(t *testing.T) {
 	}
 	expected := "testTransaction"
 	actual := tr[0].Name
+        fmt.Printf("%v\n",tr)
+        fmt.Println(actual)
 	if expected != actual {
 		t.Errorf("Expected: %s, Actual: %s", expected, actual)
 	}
