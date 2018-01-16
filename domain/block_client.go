@@ -4,30 +4,19 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
+	"strconv"
+	"time"
+
 	"github.com/gericass/goriyak/model/local"
 	"github.com/gericass/goriyak/model/public"
 	pb "github.com/gericass/goriyak/proto"
 	"github.com/golang/protobuf/ptypes"
-	"strconv"
-	"time"
-	"encoding/base64"
 )
-
-type timeSet struct {
-	start time.Time
-	end   time.Time
-}
 
 func generateTransactionID(r *local.LocalTransaction) string {
 	key := r.Name + r.SendNodeID + r.ReceiveNodeID
 	hash := sha256.Sum256([]byte(key))
 	return hex.EncodeToString(hash[:])
-}
-
-func (t *timeSet) generateBlockID() string {
-	seed := t.start.String() + " : " + t.end.String()
-	str := base64.StdEncoding.EncodeToString([]byte(seed))
-	return str
 }
 
 func parseTime(currentTime time.Time) (*timeSet, error) {

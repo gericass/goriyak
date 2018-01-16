@@ -7,11 +7,11 @@ import (
 
 func TestGetAdmin(t *testing.T) {
 
-	res, err := GetAdmin("test")
+	res, err := GetAdmin("test2")
 	if err != nil {
 		t.Error("error: ", err)
 	}
-	expected := "test5"
+	expected := "test"
 	actual := res.ID
 	if expected != actual {
 		t.Errorf("expected %s, actual %s", expected, actual)

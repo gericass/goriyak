@@ -1,3 +1,3 @@
 package public
 
-const baseURL = "http://localhost:10000"
+const baseURL = "http://public:8098"
