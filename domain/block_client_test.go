@@ -24,4 +24,5 @@ func TestGenerateBlockID(t *testing.T) {
 	if expect != string(actual) {
 		t.Errorf("expected: %s,\n actual: %s", expect, string(actual))
 	}
+	fmt.Println(string(actual))
 }
