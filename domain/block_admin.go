@@ -14,6 +14,7 @@ import (
 	"github.com/gericass/goriyak/model/local"
 	"github.com/gericass/goriyak/model/public"
 	pb "github.com/gericass/goriyak/proto"
+	"github.com/gericass/goriyak/setting"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -49,8 +50,6 @@ func broadcastMiningResult(r *pb.MiningResult) error {
 	if _, err := c.PostBlock(context.Background(), r); err != nil {
 		return err
 	}
-	return nil
-
 	return nil
 }
 
@@ -109,7 +108,6 @@ func transactionToStaring(tr []*pb.Block_Transaction) string {
 	return str
 }
 
-// TODO implements
 func confirmHashing(b *pb.Block) bool {
 	seed := b.Id + transactionToStaring(b.Transactions) + ptypes.TimestampString(b.StartedAt) + ptypes.TimestampString(b.FinishedAt) + b.PreviousHash + b.Nonce + ptypes.TimestampString(b.CreatedAt)
 	hash := sha256.Sum256([]byte(seed))
@@ -120,7 +118,6 @@ func confirmHashing(b *pb.Block) bool {
 	return false
 }
 
-// TODO implements
 func updateMiningResult(r *pb.MiningResult, db *sql.DB) (*pb.MiningResult, error) {
 	block, err := generateBlockByMiningResult(r, db)
 	if err != nil {
@@ -129,10 +126,9 @@ func updateMiningResult(r *pb.MiningResult, db *sql.DB) (*pb.MiningResult, error
 
 	hashingResult := confirmHashing(block)
 	if hashingResult {
-		return nil, nil
+		r.Sign = append(r.Sign, setting.ServerConfig.Name)
 	}
-
-	return nil, nil
+	return r, nil
 }
 
 func MiningController(miningResult *pb.MiningResult, db *sql.DB) (*pb.Status, error) {

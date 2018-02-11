@@ -8,8 +8,11 @@ import (
 
 // PostBlock : to post block for confirm
 func (s *GoriyakServer) PostBlock(c context.Context, r *pb.MiningResult) (*pb.Status, error) {
-
-	return &pb.Status{Message: "Block received"}, nil
+	status, err := domain.MiningController(r, s.DB)
+	if err != nil {
+		return status, err
+	}
+	return status, nil
 }
 
 // PostTransaction : to post transaction for confirm transaction
