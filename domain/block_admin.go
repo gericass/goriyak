@@ -1,15 +1,21 @@
 package domain
 
 import (
+	"database/sql"
+	"encoding/base64"
+	"strings"
+	"time"
+
+	"fmt"
+
+	"crypto/sha256"
+
+	"github.com/gericass/goriyak/go/src/github.com/golang/protobuf/ptypes"
+	"github.com/gericass/goriyak/model/local"
 	"github.com/gericass/goriyak/model/public"
 	pb "github.com/gericass/goriyak/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"encoding/base64"
-	"strings"
-	"time"
-	"github.com/gericass/goriyak/model/local"
-	"database/sql"
 )
 
 // post MiningResult to other admin node
@@ -95,10 +101,23 @@ func generateBlockByMiningResult(r *pb.MiningResult, db *sql.DB) (*pb.Block, err
 	return block, nil
 }
 
+func transactionToStaring(tr []*pb.Block_Transaction) string {
+	var str string
+	for _, v := range tr {
+		str += v.Id + v.SendNodeId + v.ReceiveNodeId + fmt.Sprint(v.Amount) + ptypes.TimestampString(v.CreatedAt)
+	}
+	return str
+}
+
 // TODO implements
 func confirmHashing(b *pb.Block) bool {
-
-	return true
+	seed := b.Id + transactionToStaring(b.Transactions) + ptypes.TimestampString(b.StartedAt) + ptypes.TimestampString(b.FinishedAt) + b.PreviousHash + b.Nonce + ptypes.TimestampString(b.CreatedAt)
+	hash := sha256.Sum256([]byte(seed))
+	s := string(hash[:32])
+	if s < "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" { // FIXME difficulty
+		return true
+	}
+	return false
 }
 
 // TODO implements
