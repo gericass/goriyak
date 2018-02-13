@@ -10,7 +10,7 @@ import (
 
 	"crypto/sha256"
 
-	"github.com/gericass/goriyak/go/src/github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/gericass/goriyak/model/local"
 	"github.com/gericass/goriyak/model/public"
 	pb "github.com/gericass/goriyak/proto"
