@@ -131,6 +131,7 @@ func updateMiningResult(r *pb.MiningResult, db *sql.DB) (*pb.MiningResult, error
 	return r, nil
 }
 
+// MiningController : Handler for MiningResult sent by other admin node
 func MiningController(miningResult *pb.MiningResult, db *sql.DB) (*pb.Status, error) {
 	if res, _ := public.GetBlock(miningResult.BlockId); res != nil {
 		return &pb.Status{Message: "Block already exists"}, nil
