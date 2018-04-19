@@ -63,6 +63,7 @@ func checkActiveMiningResult(r *pb.MiningResult) (bool, error) {
 	if lack > remaining {
 		return false, nil
 	}
+
 	return true, nil
 }
 
