@@ -11,8 +11,8 @@ import (
 	"crypto/sha256"
 
 	"github.com/golang/protobuf/ptypes"
-	"github.com/gericass/goriyak/model/local"
-	"github.com/gericass/goriyak/model/public"
+	"github.com/gericass/goriyak/db/local"
+	"github.com/gericass/goriyak/db/public"
 	pb "github.com/gericass/goriyak/proto"
 	"github.com/gericass/goriyak/setting"
 	"golang.org/x/net/context"

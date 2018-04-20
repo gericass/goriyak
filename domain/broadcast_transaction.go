@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/gericass/goriyak/model/public"
+	"github.com/gericass/goriyak/db/public"
 	pb "github.com/gericass/goriyak/proto"
 	"github.com/golang/protobuf/ptypes"
 	"golang.org/x/net/context"

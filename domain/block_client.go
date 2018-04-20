@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/gericass/goriyak/model/local"
+	"github.com/gericass/goriyak/db/local"
 	pb "github.com/gericass/goriyak/proto"
 )
 
