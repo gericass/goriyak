@@ -138,12 +138,11 @@ func MiningController(miningResult *pb.MiningResult, db *sql.DB) (*pb.Status, er
 		return &pb.Status{Message: "Block already exists"}, nil
 	}
 
-	ex, err := checkActiveMiningResult(miningResult)
+	active, err := checkActiveMiningResult(miningResult)
 	if err != nil {
 		return &pb.Status{Message: "Server error"}, err
 	}
-	if ex {
-
+	if active {
 		res, err := updateMiningResult(miningResult, db)
 		if err != nil {
 			return &pb.Status{Message: "Mining failed"}, nil
